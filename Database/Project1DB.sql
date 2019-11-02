@@ -1,6 +1,7 @@
-
+DROP DATABASE Project1DB;
 CREATE DATABASE Project1DB;
 USE Project1DB;
+USE CoffeeShop;
 
 CREATE TABLE Category(
 Code VARCHAR(255) PRIMARY KEY,
@@ -33,6 +34,7 @@ INSERT INTO Product (Code, Name, Category, ReorderLevel, Description) VALUES ('1
 INSERT INTO Product (Code, Name, Category, ReorderLevel, Description) VALUES ('1003', 'Nokia 800 Tough', '1000', 200, 'Daddy is back.');
 INSERT INTO Product (Code, Name, Category, ReorderLevel, Description) VALUES ('1004', 'JBL Everest Elite 750NC', '1007', 100, 'Take a sound adventure with us');
 INSERT INTO Product (Code, Name, Category, ReorderLevel, Description) VALUES ('1005', 'Apple iMac 21.5" MMQA2', '1001', 150, 'It''s Apple!');
+
 
 
 CREATE TABLE Customer(
@@ -91,7 +93,7 @@ INSERT INTO Sales(Date, Customer, Category, Product, Quantity, MRP) VALUES ('201
 INSERT INTO Sales(Date, Customer, Category, Product, Quantity, MRP) VALUES ('2018-07-23', '1001', '1003', '1004', '1', '100');
 INSERT INTO Sales(Date, Customer, Category, Product, Quantity, MRP) VALUES ('2018-07-23', '1001', '1001', '1003', '43', '20');
 
-SELECT * FROM Sales;
+
 CREATE TABLE Purchase(
 	PurchaseCode INT IDENTITY(20190001,1),
 	InvoiceNo VARCHAR(255) NOT NULL UNIQUE,
@@ -112,13 +114,13 @@ CREATE TABLE Purchase(
 	CONSTRAINT FK_ProductP FOREIGN KEY(Product) REFERENCES Product(Code)
 )
 
-INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('2929cc', '2018-07-23', '1002', '1001', '1000', '2009-02-11', '250', '700', '900', 'Sell kom lav besi.');
+INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, ExpireDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('2929ccd', '2018-07-23', '1002', '1001', '1005', '2009-02-11', '02-12-2020', '250', '70000', '90000', 'Sell kom lav besi.');
 INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, ExpireDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('29287pc', '2018-07-23', '1003', '1000', '1000', '2007-01-01', '2017-12-30','500', '7000', '9500', 'Sell besi lav kom.');
-INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('77729cc', '2018-07-29', '1003', '1000', '1003', '2019-08-01', '550', '200', '500', 'Sell besi lav besi.');
-INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('292589cy', '2018-07-23', '1004', '1003', '1004', '2005-07-21', '750', '500', '1000', 'Sell besi lav mondo na.');
-INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('aa29cc', '2019-01-03', '1001', '1000', '1002', '2010-02-01', '1050', '2500', '4500', 'Sell kom lav valoi.');
-INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('888829cc', '2018-07-23', '1002', '1001', '1005', '2009-02-11', '250', '7000', '9000', 'Sell kom lav besi.');
-INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('u9l29cc', '2018-07-23', '1002', '1000', '1003', '2009-02-11', '1', '7000', '9000', 'Sell kom lav besi.');
+INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, ExpireDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('77729cc', '2018-07-29', '1003', '1000', '1003', '2019-08-01','02-12-2020', '550', '2000', '5000', 'Sell besi lav besi.');
+INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, ExpireDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('292589cy', '2018-07-23', '1004', '1003', '1004', '2005-07-21','02-09-2020', '750', '500', '1000', 'Sell besi lav mondo na.');
+INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, ExpireDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('aa29cc', '2019-01-03', '1001', '1000', '1002', '2010-02-01','02-12-2025', '1050', '25000', '45000', 'Sell kom lav valoi.');
+INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, ExpireDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('888829cc', '2018-07-23', '1002', '1001', '1005', '2009-02-11','25-12-2020', '250', '70000', '90000', 'Sell kom lav besi.');
+INSERT INTO Purchase(InvoiceNo, Date, Supplier, Category, Product, ManufactureDate, ExpireDate, Quantity, UnitPrice, MRP, Remarks) VALUES ('u88l29cc', '2018-07-23', '1002', '1000', '1000', '2009-02-11','02-12-2020', '1', '700', '500.33', 'Sell kom lav besi.');
 
 SELECT * FROM Supplier;
 SELECT * FROM Product;
@@ -138,6 +140,8 @@ SELECT Product AS 'Products(Code)', ManufactureDate AS 'Manufactured Date', Expi
 SELECT LoyalityPoint FROM Customer WHERE Code = '1000';
 SELECT MRP FROM Purchase WHERE Category = '1000' AND Product = '1000';
 UPDATE Customer SET LoyalityPoint = '22' Where Code = '1000';
+SELECT InvoiceNo FROM Purchase;
+SELECT ReorderLevel FROM Product WHERE Category = '' AND Code = '';
 --Sales--
 
 
@@ -145,77 +149,12 @@ UPDATE Customer SET LoyalityPoint = '22' Where Code = '1000';
 SELECT Name + '(' + Code + ')' AS Category FROM Category
 SELECT Name + '(' + Code + ')' AS Produt FROM Product WHERE Category = '1000'
 
+SELECT Quantity FROM Available WHERE Category = '1000' AND Product = '1000';
 
+SELECT UnitPrice, MRP FROM Purchase WHERE
+PurchaseCode IN
+(SELECT MAX(PurchaseCode) FROM Purchase WHERE Category = '1000' AND Product = '1000');
 
-CREATE VIEW [PurchaseReport]
-As
-
-SELECT Product.Code As 'Code',MIN(Purchase.Date) AS 'Date', Product.Name As 'ProductName', Category.Name As 'CategoryName',SUM( (MRP*Quantity)) As 'TotalMRP',
-SUM( (UnitPrice*Quantity)) As 'TotalPrice',SUM( Quantity) As 'Quantity', SUM((MRP*Quantity)-(UnitPrice*Quantity)) AS 'Profit'
-FROM Purchase 
-LEFT JOIN Product ON Purchase.Product=Product.Code
-LEFT JOIN Category ON Purchase.Category=Category.Code
-
-GROUP BY Product.Name, Category.Name, Product.Code;
-
-
-
-DROP VIEW [PurchaseReport];
-
-SELECT * FROM [PurchaseReport]
-
-
---sales--
-
-
-
-
---sales first step--
-
-
-CREATE VIEW PerUnitPrice
-As
-SELECT Product.Name As 'Product', Category.Name As 'Category' , AVG(Purchase.UnitPrice) As Unitprice FROM Purchase
-LEFT JOIN Product ON Purchase.Product=Product.Code
-LEFT JOIN Category  ON Purchase.Category=Category.Code 
-GROUP BY Product.Name, Category.Name
--- show main value--- 
-
-SELECT Product.Name As 'name', Category.Name As 'category',Sales.MRP As 'mrp',Sales.Quantity As 'quantity'
-FROM Sales, Product, Category WHERE Sales.Category=Category.Code AND Sales.Product=Product.Code; 
-
-DROP VIEW PerUnitPrice;
-
-SELECT Product, Category, Unitprice FROM PerUnitPrice;
-------------------------------------
-CREATE VIEW SalesView
-As
-SELECT Product.Code As 'Code', Product.Name As 'Name',Category.Name As 'Category',Sales.Date As 'Date', Sales.Quantity As 'Quantity',Sales.MRP As 'MRP'
-FROM Sales
-LEFT JOIN Product ON Sales.Product=Product.Code 
-LEFT JOIN Category ON Sales.Category=Category.Code ;
-
-SELECT * FROM SalesView WHERE Date='2018-07-13';
-
-DROP VIEW SalesView;
-
---- FINAL SALES REPORT---
-
-CREATE VIEW SalesRepoting
-As
-SELECT SalesView.Code As 'Code', Name As 'Name', SalesView.Category As 'Category',Min(Date) As Date,
-SUM( Quantity) AS 'Quantity',SUM (MRP*Quantity) As 'TotalMRP',Sum( PerUnitPrice.Unitprice*Quantity) As 'totalUnitPrice',
-SUM((MRP*Quantity)-(PerUnitPrice.Unitprice*Quantity))As Profit
- FROM SalesView
-LEFT JOIN PerUnitPrice ON SalesView.Name = PerUnitPrice.Product AND SalesView.Category=PerUnitPrice.Category
-GROUP BY Name,SalesView.Category, SalesView.Code ;
-
-DROP VIEW SalesRepoting;
-
-SELECT * FROM SalesRepoting;
--------------------------------------------
-SELECT Product.Name As 'name', Category.Name As 'category',Purchase.UnitPrice As 'price',Purchase.Quantity As 'quantity'
-FROM Purchase, Product, Category WHERE Purchase.Category=Category.Code AND Purchase.Product=Product.Code; 
 
 /*
 CREATE VIEW AvailableTemp AS
@@ -270,10 +209,18 @@ SELECT Product, PQ FROM
 		(SELECT S.Category AS SC, S.Product AS SP, SUM(S.Quantity) AS SQ FROM Sales AS S GROUP BY S.Category, S.Product) AS Sal 
 		ON Pro.PC=Sal.SC AND Pro.PP=Sal.SP;
 
-SELECT * FROM Available
+
+/* For Stock */
+SELECT Code, Name, CONCAT(Customer.Name,'(',Customer.Code,')') AS NameAndCode FROM Customer;
+SELECT CONCAT(Customer.Code,', ,',Customer.Name) AS FAU FROM Customer;
+
+SELECT Product.Name AS Name, Category.Name AS Category, Product.ReorderLevel  From Product LEFT JOIN Category ON Product.Category = Category.Code WHERE Category.Code = '1000' AND Product.Code = '1000';
+
 /*
+SELECT * FROM Category;
 SELECT * FROM Customer;
-SELECT * FROM Sales;
+SELECT Code, Name FROM Supplier;
+SELECT * FROM Sales ORDER BY Date;
 SELECT * FROM Purchase;
 SELECT * FROM AvailableTemp;
 SELECT * FROM Available;
@@ -281,6 +228,7 @@ SELECT * FROM Available ORDER BY Category;
 */
 
 /*
+DROP TABLE Category;
 DROP TABLE Sales;
 DROP TABLE Purchase;
 DROP TABLE Product;
