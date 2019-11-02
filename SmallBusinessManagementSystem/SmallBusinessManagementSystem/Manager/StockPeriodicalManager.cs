@@ -24,6 +24,16 @@ namespace SmallBusinessManagementSystem.Manager
         {
             return _stockPeriodicalRepository.hasProductExist(stockPeriodical);
         }
+
+        public List<CategoryModel> GetCategoryList()
+        {
+            return _stockPeriodicalRepository.GetCategoryList();
+        }
+
+        public List<ProductModel> GetProductList(string category)
+        {
+            return _stockPeriodicalRepository.GetProductList(category);
+        }
     }
 }
  

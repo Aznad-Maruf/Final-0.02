@@ -44,17 +44,23 @@
             this.supplierContactPersonTextBox = new System.Windows.Forms.TextBox();
             this.saveButton = new System.Windows.Forms.Button();
             this.suppliersDataGridView = new System.Windows.Forms.DataGridView();
-            this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Action = new System.Windows.Forms.DataGridViewLinkColumn();
-            this.supplierEntryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.salesModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.homeButton = new System.Windows.Forms.Button();
+            this.searchTextBox = new System.Windows.Forms.TextBox();
+            this.searchButton = new System.Windows.Forms.Button();
+            this.supplierEntryBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Action = new System.Windows.Forms.DataGridViewLinkColumn();
             ((System.ComponentModel.ISupportInitialize)(this.suppliersDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.supplierEntryBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.salesModelBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -169,6 +175,12 @@
             this.suppliersDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.suppliersDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Count,
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3,
+            this.dataGridViewTextBoxColumn4,
+            this.dataGridViewTextBoxColumn5,
+            this.dataGridViewTextBoxColumn6,
             this.Action});
             this.suppliersDataGridView.DataSource = this.supplierEntryBindingSource;
             this.suppliersDataGridView.Location = new System.Drawing.Point(30, 325);
@@ -178,20 +190,6 @@
             this.suppliersDataGridView.TabIndex = 3;
             this.suppliersDataGridView.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.suppliersDataGridView_RowPostPaint);
             this.suppliersDataGridView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.suppliersDataGridView_MouseClick);
-            // 
-            // Count
-            // 
-            this.Count.HeaderText = "SI";
-            this.Count.Name = "Count";
-            // 
-            // Action
-            // 
-            this.Action.HeaderText = "Action";
-            this.Action.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
-            this.Action.Name = "Action";
-            this.Action.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Action.Text = "Edit";
-            this.Action.UseColumnTextForLinkValue = true;
             // 
             // label7
             // 
@@ -229,18 +227,91 @@
             // homeButton
             // 
             this.homeButton.Image = ((System.Drawing.Image)(resources.GetObject("homeButton.Image")));
-            this.homeButton.Location = new System.Drawing.Point(435, 12);
+            this.homeButton.Location = new System.Drawing.Point(295, 12);
             this.homeButton.Name = "homeButton";
             this.homeButton.Size = new System.Drawing.Size(43, 35);
             this.homeButton.TabIndex = 8;
             this.homeButton.UseVisualStyleBackColor = true;
             this.homeButton.Click += new System.EventHandler(this.homeButton_Click);
             // 
+            // searchTextBox
+            // 
+            this.searchTextBox.Location = new System.Drawing.Point(466, 57);
+            this.searchTextBox.Name = "searchTextBox";
+            this.searchTextBox.Size = new System.Drawing.Size(228, 20);
+            this.searchTextBox.TabIndex = 9;
+            // 
+            // searchButton
+            // 
+            this.searchButton.Location = new System.Drawing.Point(730, 52);
+            this.searchButton.Name = "searchButton";
+            this.searchButton.Size = new System.Drawing.Size(104, 28);
+            this.searchButton.TabIndex = 10;
+            this.searchButton.Text = "Search";
+            this.searchButton.UseVisualStyleBackColor = true;
+            this.searchButton.Click += new System.EventHandler(this.searchButton_Click);
+            // 
+            // supplierEntryBindingSource
+            // 
+//            this.supplierEntryBindingSource.DataSource = typeof(SmallBusinessManagementSystem.Model.SupplierEntry);
+            // 
+            // Count
+            // 
+            this.Count.HeaderText = "SI";
+            this.Count.Name = "Count";
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Code";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Code";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "Name";
+            this.dataGridViewTextBoxColumn2.HeaderText = "Name";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "Address";
+            this.dataGridViewTextBoxColumn3.HeaderText = "Address";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.DataPropertyName = "Email";
+            this.dataGridViewTextBoxColumn4.HeaderText = "Email";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.DataPropertyName = "Contact";
+            this.dataGridViewTextBoxColumn5.HeaderText = "Contact";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.DataPropertyName = "ContactPerson";
+            this.dataGridViewTextBoxColumn6.HeaderText = "ContactPerson";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            // 
+            // Action
+            // 
+            this.Action.HeaderText = "Action";
+            this.Action.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
+            this.Action.Name = "Action";
+            this.Action.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Action.Text = "Edit";
+            this.Action.UseColumnTextForLinkValue = true;
+            // 
             // SupplierEntryUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(896, 487);
+            this.Controls.Add(this.searchButton);
+            this.Controls.Add(this.searchTextBox);
             this.Controls.Add(this.homeButton);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
@@ -264,7 +335,6 @@
             this.Load += new System.EventHandler(this.SupplierEntryUI_Load);
             ((System.ComponentModel.ISupportInitialize)(this.suppliersDataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.supplierEntryBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.salesModelBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -289,16 +359,23 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.BindingSource supplierEntryBindingSource;
-        private System.Windows.Forms.BindingSource salesModelBindingSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Count;
         private System.Windows.Forms.DataGridViewTextBoxColumn codeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn emailDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn contactDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn contactPersonDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewLinkColumn Action;
         private System.Windows.Forms.Button homeButton;
+        private System.Windows.Forms.TextBox searchTextBox;
+        private System.Windows.Forms.Button searchButton;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Count;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.Windows.Forms.DataGridViewLinkColumn Action;
+        private System.Windows.Forms.BindingSource supplierEntryBindingSource;
     }
 }

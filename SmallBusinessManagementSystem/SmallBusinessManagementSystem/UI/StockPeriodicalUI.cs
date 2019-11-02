@@ -23,33 +23,47 @@ namespace SmallBusinessManagementSystem.UI
         StockPeriodicalManager _stockPeriodicalManager = new StockPeriodicalManager();
         StockPeriodical stockPeriodical = new StockPeriodical();
 
+        private bool _isCategorySelected = false, _isProductSelected = false;
+
         private void searchStockButton_Click(object sender, EventArgs e)
         {
-           
-            if (!String.IsNullOrEmpty(stockProductTextBox.Text) && !String.IsNullOrEmpty(stockCategoryTextBox.Text) )
-            {
-
-                 stockPeriodical.startDate = startDateTimePicker.Text;
-                 stockPeriodical.endDate = endDateTimePicker.Text;
-                 stockPeriodical.productName = stockProductTextBox.Text;
-                 stockPeriodical.productCategory = stockCategoryTextBox.Text;
-
-            }
-           
-            else
-            {
-                MessageBox.Show("Product Name and Category Must be Required ");
-            }
-
-           
 
             bool isExist = _stockPeriodicalManager.hasProductExist(stockPeriodical);
             if (isExist)
             {
-                stockSearchDataGridView.DataSource = _stockPeriodicalManager.searchStock( stockPeriodical);
+                MessageBox.Show("Product Available");
+               
+            }
+            else
+            {
+                MessageBox.Show("Product is Not Available");
+                return;
             }
 
-            
+            if (!String.IsNullOrEmpty(startDateTimePicker.Text) && !String.IsNullOrEmpty(endDateTimePicker.Text))
+            {
+                stockPeriodical.startDate = startDateTimePicker.Text;
+                stockPeriodical.endDate = endDateTimePicker.Text;
+
+                if(_stockPeriodicalManager.searchStock(stockPeriodical).Any())
+                {
+                    stockSearchDataGridView.DataSource = _stockPeriodicalManager.searchStock(stockPeriodical);
+                }
+                else
+                {
+                    MessageBox.Show("No Data Found");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Select Start and End date....");
+                return;
+               
+            }
+
+
+
+
         }
 
         private void stockSearchDataGridView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -63,6 +77,57 @@ namespace SmallBusinessManagementSystem.UI
             HomeUI newForm = new HomeUI();
             newForm.Show();
             this.Hide();
+        }
+
+        private void StockPeriodicalUI_Load(object sender, EventArgs e)
+        {
+           
+            categoryComboBox.DataSource = _stockPeriodicalManager.GetCategoryList();
+
+            categoryComboBox.ValueMember = "Code";
+            categoryComboBox.DisplayMember = "Name";
+            categoryComboBox.SelectedIndex = -1;
+
+        }
+
+        private void productComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (productComboBox.SelectedIndex != 0) _isProductSelected = true;
+            if (productComboBox.SelectedIndex == -1) return;
+            if (_isProductSelected)
+            {
+                
+                stockPeriodical.productCategory = ((CategoryModel)categoryComboBox.SelectedItem).Name ;
+                stockPeriodical.CategoryCode = ((CategoryModel)categoryComboBox.SelectedItem).Code;
+                stockPeriodical.productName = ((ProductModel)productComboBox.SelectedItem).Name;
+                stockPeriodical.ProductCode = ((ProductModel)productComboBox.SelectedItem).Code;
+               
+            }
+
+        }
+
+        private void categoryComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (categoryComboBox.SelectedIndex != 0)
+            {
+                _isCategorySelected = true;
+            }
+
+            
+            if (categoryComboBox.SelectedIndex == -1)
+            {
+                return;
+            }
+            
+            if (_isCategorySelected)
+            {
+               
+                productComboBox.DataSource =_stockPeriodicalManager.GetProductList(((CategoryModel)categoryComboBox.SelectedItem).Code.ToString());
+                productComboBox.ValueMember = "Code";
+                productComboBox.DisplayMember = "Name";
+                _isProductSelected = false;
+                             
+            }
         }
     }
 }

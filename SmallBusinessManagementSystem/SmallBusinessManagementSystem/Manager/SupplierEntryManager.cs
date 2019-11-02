@@ -40,11 +40,7 @@ namespace SmallBusinessManagementSystem.Manager
             return _supplierEntryRepository.isContactExist(_supplierEntry);
         }
 
-        //public DataTable SearchBy(Suppliers _suppliers)
-        //{
-        //    return _suppliersRepository.SearchBy(_suppliers);
-        //}
-
+        
         public bool IsEditExist(SupplierEntry _supplierEntry)
         {
             return _supplierEntryRepository.isEditExist(_supplierEntry);
@@ -52,6 +48,11 @@ namespace SmallBusinessManagementSystem.Manager
         public bool EditData(SupplierEntry _supplierEntry)
         {
             return _supplierEntryRepository.EditData(_supplierEntry);
+        }
+
+        public DataTable SearchSupplier(SupplierEntry _supplierEntry)
+        {
+            return _supplierEntryRepository.SearchSupplier(_supplierEntry);
         }
     }
 }

@@ -182,5 +182,32 @@ namespace SmallBusinessManagementSystem.UI
             newForm.Show();
             this.Hide();
         }
+
+        private void searchButton_Click(object sender, EventArgs e)
+        {
+            if(String.IsNullOrEmpty(searchTextBox.Text))
+            {
+                MessageBox.Show("Search Feild Can't Empty");
+            }
+            else
+            {
+                _supplierEntry.Name = searchTextBox.Text;
+                _supplierEntry.Email = searchTextBox.Text;
+                _supplierEntry.Contact = searchTextBox.Text;
+
+                DataTable showData = _supplierEntryManager.SearchSupplier(_supplierEntry);
+                if (showData.Rows.Count > 0)
+                {
+                    suppliersDataGridView.DataSource = showData;
+                }
+                else
+                {
+                    MessageBox.Show("No Data Matched!!!");
+                }
+            }
+          
+        }       
+           
     }
 }
+

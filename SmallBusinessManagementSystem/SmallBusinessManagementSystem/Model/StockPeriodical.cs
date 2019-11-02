@@ -14,7 +14,8 @@ namespace SmallBusinessManagementSystem.Model
         public string endDate { set; get; }
 
 
-        public string Code { set; get; }       
+        public string ProductCode { set; get; }
+        public string CategoryCode { set; get; }
         public string ExpiredDate { set; get; }
         public int Reorderlavel { set; get; }
         public int OpeningBalance { set; get; }

@@ -282,3 +282,241 @@ ContactPerson VARCHAR(11) NOT NULL
 
 select * from Supplier
 */
+
+
+/* Others */
+
+
+
+CREATE VIEW [PurchaseReport]
+As
+
+SELECT Product.Code As 'Code',MIN(Purchase.Date) AS 'Date', Product.Name As 'ProductName', Category.Name As 'CategoryName',SUM( (MRP*Quantity)) As 'TotalMRP',
+SUM( (UnitPrice*Quantity)) As 'TotalPrice',SUM( Quantity) As 'Quantity', SUM((MRP*Quantity)-(UnitPrice*Quantity)) AS 'Profit'
+FROM Purchase 
+LEFT JOIN Product ON Purchase.Product=Product.Code
+LEFT JOIN Category ON Purchase.Category=Category.Code
+
+GROUP BY Product.Name, Category.Name, Product.Code;
+
+
+
+DROP VIEW [PurchaseReport];
+
+SELECT * FROM [PurchaseReport]
+
+
+--sales--
+
+
+
+
+--sales first step--
+
+
+CREATE VIEW PerUnitPrice
+As
+SELECT Product.Name As 'Product', Category.Name As 'Category' , AVG(Purchase.UnitPrice) As Unitprice FROM Purchase
+LEFT JOIN Product ON Purchase.Product=Product.Code
+LEFT JOIN Category  ON Purchase.Category=Category.Code 
+GROUP BY Product.Name, Category.Name;
+-- show main value--- 
+
+SELECT Product.Name As 'name', Category.Name As 'category',Sales.MRP As 'mrp',Sales.Quantity As 'quantity'
+FROM Sales, Product, Category WHERE Sales.Category=Category.Code AND Sales.Product=Product.Code; 
+
+DROP VIEW PerUnitPrice;
+
+SELECT Product, Category, Unitprice FROM PerUnitPrice;
+------------------------------------
+CREATE VIEW SalesView
+As
+SELECT Product.Code As 'Code', Product.Name As 'Name',Category.Name As 'Category',Sales.Date As 'Date', Sales.Quantity As 'Quantity',Sales.MRP As 'MRP'
+FROM Sales
+LEFT JOIN Product ON Sales.Product=Product.Code 
+LEFT JOIN Category ON Sales.Category=Category.Code ;
+
+SELECT * FROM SalesView WHERE Date='2018-07-13';
+
+DROP VIEW SalesView;
+
+--- FINAL SALES REPORT---
+
+CREATE VIEW SalesRepoting
+As
+SELECT SalesView.Code As 'Code', Name As 'Name', SalesView.Category As 'Category',Min(Date) As Date,
+SUM( Quantity) AS 'Quantity',SUM (MRP*Quantity) As 'TotalMRP',Sum( PerUnitPrice.Unitprice*Quantity) As 'totalUnitPrice',
+SUM((MRP*Quantity)-(PerUnitPrice.Unitprice*Quantity))As Profit
+ FROM SalesView
+LEFT JOIN PerUnitPrice ON SalesView.Name = PerUnitPrice.Product AND SalesView.Category=PerUnitPrice.Category
+GROUP BY Name,SalesView.Category, SalesView.Code ;
+
+DROP VIEW SalesRepoting;
+
+
+-------------------------------------------
+SELECT Product.Name As 'name', Category.Name As 'category',Purchase.UnitPrice As 'price',Purchase.Quantity As 'quantity'
+FROM Purchase, Product, Category WHERE Purchase.Category=Category.Code AND Purchase.Product=Product.Code; 
+
+/*
+CREATE VIEW AvailableTemp AS
+SELECT P.Category AS Category, P.Product AS Product, P.Quantity AS PQ, S.Quantity AS SQ,
+CASE
+	WHEN S.Quantity IS NULL THEN P.Quantity
+	ELSE P.Quantity-S.Quantity
+END AS AvailableQuantity
+FROM Purchase AS P LEFT JOIN Sales AS S ON P.Product = S.Product AND P.Category = S.Category;
+
+CREATE VIEW Available AS
+SELECT Category, Product, SUM(AvailableQuantity)AS Quantity FROM AvailableTemp GROUP BY Category, Product;
+
+CREATE VIEW Available AS
+SELECT P.Product, AvailableQuantity AS Quantity
+FROM
+SELECT P.Product AS Product,
+CASE
+	WHEN S.Quantity IS NULL THEN P.Quantity
+	ELSE P.Quantity-S.Quantity
+END AS AvailableQuantity
+FROM Purchase AS P LEFT JOIN Sales AS S ON P.Product = S.Product GROUP BY P.Product;
+
+SELECT P.Product AS Product, SUM(P.Quantity) AS PQ, SUM(S.Quantity) AS SQ 
+FROM Purchase AS P LEFT JOIN Sales AS S ON P.Product = S.Product GROUP BY P.Product;
+
+SELECT Product, PQ FROM 
+ SELECT Category, Product,SUM(Quantity) AS PQ FROM Purchase GROUP BY  Category,Product;
+
+ SELECT Product, SQ FROM 
+ SELECT Category, Product,SUM(Quantity) AS SQ FROM Sales GROUP BY  Category,Product;
+
+ SELECT P.Category AS Category, P.Product AS Product, SUM(P.Quantity)-SUM(S.Quantity) AS AvailableQuantity 
+ FROM Purchase AS P LEFT JOIN Sales AS S ON P.Category = S.Category AND P.Product = S.Product GROUP BY P.Category, P.Product;
+
+ SELECT P.Category AS Category, P.Product AS Product, P.Quantity AS PQ, S.Quantity AS SQ
+ FROM Purchase AS P LEFT JOIN Sales AS S ON P.Category = S.Category AND P.Product = S.Product GROUP BY P.Category, P.Product;
+
+
+ SELECT P.Category, P.Product, SUM(P.Quantity) AS PQ FROM Purchase AS P GROUP BY P.Category, P.Product;
+ SELECT S.Category, S.Product, SUM(S.Quantity) AS SQ FROM Sales AS S GROUP BY S.Category, S.Product;
+*/
+
+ CREATE VIEW Available AS
+ SELECT Pro.PC AS Category, Pro.PP AS Product, 
+ CASE 
+	WHEN SQ IS NULL THEN PQ
+	ELSE PQ-SQ
+ END AS Quantity FROM
+	(SELECT P.Category AS PC, P.Product AS PP, SUM(P.Quantity) AS PQ FROM Purchase AS P GROUP BY P.Category, P.Product) AS Pro
+		LEFT JOIN
+		(SELECT S.Category AS SC, S.Product AS SP, SUM(S.Quantity) AS SQ FROM Sales AS S GROUP BY S.Category, S.Product) AS Sal 
+		ON Pro.PC=Sal.SC AND Pro.PP=Sal.SP;
+
+SELECT * FROM [PurchaseReport]
+SELECT * FROM SalesRepoting;
+SELECT * FROM Available
+
+CREATE VIEW [dbo].[StockIn]
+AS
+
+SELECT  Purchase.Date AS 'In Date', Purchase.Product  AS 'Code', Product.Name AS 'Name',Category.Name As 'Category' ,
+Product.ReorderLevel AS 'Reoreder Level',Purchase.ExpireDate AS 'Expired Date', Purchase.Quantity AS 'In'
+FROM Purchase
+
+INNER JOIN Product ON Product.Code = Purchase.Product
+INNER JOIn Category ON Category.Code = Purchase.Category
+
+
+
+CREATE VIEW [dbo].[StockOut]
+AS
+SELECT Sales.Date AS 'Out Date', Product.Name AS 'Name',StockIn.Name As 'Category' , Sales.Quantity AS 'Out'
+
+
+FROM Sales
+INNER JOIN Product ON Product.Code = Sales.Product 
+INNER JOIN StockIn ON StockIn.Code = Sales.Product
+--INNER JOIN Available ON Available.Category = Sales.Category
+
+
+CREATE VIEW [dbo].[StockPeriodical]
+AS
+SELECT StockIn.Code AS 'Code', StockIn.Name AS 'Name',StockIn.Category AS 'Category', StockIn.[Reoreder Level] AS 'ReorederLevel',StockIn.[Expired Date] AS 'Expired Date',
+StockIn.[In Date] AS 'StartDate', (Available.[Quantity]) As 'Openning Balance',StockIn.[In] As 'In',StockOut.[Out] AS 'Out', ((Available.[Quantity] + StockIn.[In]) -StockOut.[Out]) AS 'Closing Balance', StockOut.[Out Date] AS 'EndDate'
+FROM StockIn
+INNER JOIN StockOut ON StockIn.Name =StockOut.Name
+INNER JOIN Available ON Available.Product = StockIn.Code 
+
+
+
+
+SELECT * FROM StockIn;
+SELECT * FROM StockOut;
+SELECT * FROM StockPeriodical
+SELECT * FROM Available;
+
+drop view StockIn;
+drop view StockOut;
+drop view StockPeriodical;
+/*
+SELECT * FROM Customer;
+SELECT * FROM Sales;
+SELECT * FROM Purchase;
+SELECT * FROM AvailableTemp;
+SELECT * FROM Available;
+SELECT * FROM Available ORDER BY Category;
+*/
+
+/*
+DROP TABLE Sales;
+DROP TABLE Purchase;
+DROP TABLE Product;
+DROP TABLE Customer;
+DROP VIEW AvailableTemp;
+DROP VIEW Available;
+*/
+/*
+CREATE DATABASE Project1
+USE Project1
+CREATE TABLE Category(
+
+
+Code INT IDENTITY(1000,1) PRIMARY KEY ,
+Name VARCHAR(255) UNIQUE NOT NULL
+
+)
+
+SELECT * FROM Category
+DROP TABLE Category
+
+CREATE TABLE Product(
+
+Code INT IDENTITY(1000,1) PRIMARY KEY NOT NULL,
+Name VARCHAR(255) UNIQUE NOT NULL,
+Category VARCHAR(255) NOT NULL,
+ReorderLevel INT NOT NULL,
+Description TEXT
+
+)
+SELECT * FROM Product
+
+CREATE TABLE Customer(
+Code INT IDENTITY(1000,1) PRIMARY KEY NOT NULL,
+Name VARCHAR(255) NOT NULL,
+Address VARCHAR(255) NOT NULL,
+Email VARCHAR(255) UNIQUE NOT NULL,
+Contact VARCHAR(11) UNIQUE NOT NULL,
+LoyalityPoint INT
+)
+select * from Customer
+
+CREATE TABLE Supplier(
+Code INT IDENTITY(1000,1) PRIMARY KEY NOT NULL,
+Name VARCHAR(255) NOT NULL,
+Address VARCHAR(255) NOT NULL,
+Email VARCHAR(255) UNIQUE NOT NULL,
+Contact VARCHAR(11) UNIQUE NOT NULL,
+ContactPerson VARCHAR(11) NOT NULL
+)
+
+select * from Supplier
+*/

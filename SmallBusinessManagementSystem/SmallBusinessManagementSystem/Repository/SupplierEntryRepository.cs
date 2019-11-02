@@ -46,7 +46,7 @@ namespace SmallBusinessManagementSystem.Repository
             }
             catch (Exception exception)
             {
-                // MessageBox.Show(exception.Message);
+                return false;
             }
 
             return saved;
@@ -72,21 +72,7 @@ namespace SmallBusinessManagementSystem.Repository
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
             DataTable dataTable = new DataTable();
             sqlDataAdapter.Fill(dataTable);
-            //SqlCommandBuilder sqlCommandBuilder = new SqlCommandBuilder(sqlDataAdapter);
-
-
-
-
-            //if (dataTable.Rows.Count > 0)
-            //{
-            //    //showDataGridView.DataSource = dataTable;
-            //}
-            //else
-            //{
-            //    //showDataGridView.DataSource = null;
-            //    //MessageBox.Show("No data Found!!");
-            //}
-
+           
 
             sqlConnection.Close();
             return dataTable;
@@ -216,31 +202,7 @@ namespace SmallBusinessManagementSystem.Repository
             return Exist;
         }
 
-        //public DataTable SearchBy(Suppliers suppliers)
-        //{
-
-
-        //        string connectionString = @"Server=FATEMA; DataBase=Project1DB; Integrated Security=True";
-        //        SqlConnection sqlConnection = new SqlConnection(connectionString);
-
-        //        //Comand establish
-        //        string commandString = @"SELECT * FROM Supplier WHERE Name = '" + suppliers.Name + "' OR Email = '"+suppliers.Email+"' OR Contact = '"+suppliers.Contact+"' ";
-        //        SqlCommand sqlCommand = new SqlCommand(commandString, sqlConnection);
-
-
-        //        sqlConnection.Open();
-
-        //        //Sql command Execute
-        //        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
-        //        DataTable dataTable = new DataTable();
-        //        sqlDataAdapter.Fill(dataTable);
-
-
-        //        sqlConnection.Close();
-
-        //        return dataTable;
-
-        //}
+      
 
         public bool isEditExist(SupplierEntry _supplierEntry)
         {
@@ -320,6 +282,33 @@ namespace SmallBusinessManagementSystem.Repository
             return isEdited;
         }
 
+        public DataTable SearchSupplier(SupplierEntry _supplierEntry)
+        {
+            string connectionString = _connectionRepository.GetConnectionString();
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+
+            string commandString = @"SELECT * FROM Supplier WHERE Name = '" + _supplierEntry.Name + "' OR Email = '" + _supplierEntry.Email + "' OR Contact = '" + _supplierEntry.Contact + "' ";
+
+            SqlCommand sqlCommand = new SqlCommand(commandString, sqlConnection);
+
+            sqlConnection.Open();
+
+            //execution
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+            DataTable dataTable = new DataTable();
+            sqlDataAdapter.Fill(dataTable);
+
+            if (dataTable.Rows.Count > 0)
+            {
+                return dataTable;
+            }
+
+            //close
+            sqlConnection.Close();
+
+            return dataTable;
+        }
+       
 
     }
 }
